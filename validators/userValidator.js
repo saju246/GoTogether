@@ -1,100 +1,81 @@
 const { body } = require("express-validator");
 
 const signupValidation = [
-  body("firstName")
+  body("fullname")
     .isLength({ min: 2, max: 50 })
-    .withMessage("First Name should be 2-50 characters"),
-  body("lastName").optional().isLength({ max: 50 }),
+    .withMessage("Full Name should be between 2-50 characters"),
+
   body("email")
     .isEmail()
-    .withMessage("Invalid Email")
+    .withMessage("Invalid Email format")
     .normalizeEmail(),
+
   body("password")
     .isStrongPassword()
-    .withMessage("Password must be strong (min 8 chars, uppercase, lowercase, number, special char)"),
-  body("role")
+    .withMessage(
+      "Password must have at least 8 chars, uppercase, lowercase, number, and special char"
+    ),
+
+  body("phone")
     .optional()
-    .isIn(["traveler", "organizer"])
-    .withMessage("Role must be traveler or organizer"),
-  body("age")
-    .optional()
-    .isInt({ min: 18 })
-    .withMessage("Age must be at least 18"),
-  body("gender")
-    .optional()
-    .isIn(["male", "female", "other"]),
+    .isMobilePhone("any")
+    .withMessage("Invalid phone number"),
+
   body("profileImage")
     .optional()
     .isURL()
-    .withMessage("Invalid Profile Image URL"),
-  body("about")
+    .withMessage("Profile image must be a valid URL"),
+
+  body("role")
     .optional()
-    .isLength({ max: 300 })
-    .withMessage("About section max length is 300 characters"),
+    .isIn(["user", "organizer", "admin"])
+    .withMessage("Role must be user, organizer, or admin"),
 ];
 
 const loginValidation = [
   body("email").isEmail().withMessage("Valid Email required").normalizeEmail(),
-  body("password").notEmpty().withMessage("Password required"),
+  body("password").notEmpty().withMessage("Password is required"),
 ];
 
 const editProfileValidation = [
-  body("firstName")
+  body("fullname")
     .optional()
     .isLength({ min: 2, max: 50 })
-    .withMessage("First Name should be 2-50 characters"),
-  body("lastName").optional().isLength({ max: 50 }),
-  body("profileImage").optional().isURL().withMessage("Invalid Profile Image URL"),
-  body("about")
-    .optional()
-    .isLength({ max: 300 })
-    .withMessage("About section max length is 300 characters"),
-  body("gender").optional().isIn(["male", "female", "other"]),
-  body("age").optional().isInt({ min: 18 }),
-];
+    .withMessage("Full Name should be between 2-50 characters"),
 
-const organizerKYCValidation = [
-  body("kycVerified")
+
+  body("phone")
+    .optional()
+    .isMobilePhone("any")
+    .withMessage("Invalid phone number"),
+
+  body("profileImage")
+    .optional()
+    .isURL()
+    .withMessage("Invalid profile image URL"),
+
+  body("isActive")
+    .optional()
     .isBoolean()
-    .withMessage("KYC status must be true or false"),
-];
+    .withMessage("isActive must be true or false"),
 
-const bookingValidation = [
-  body("tripId")
-    .notEmpty()
-    .withMessage("Trip ID is required")
-    .isMongoId()
-    .withMessage("Invalid Trip ID"),
-  body("paymentDetails.razorpayOrderId")
-    .notEmpty()
-    .withMessage("Razorpay Order ID required"),
-  body("paymentDetails.razorpayPaymentId")
-    .notEmpty()
-    .withMessage("Razorpay Payment ID required"),
-  body("paymentDetails.razorpaySignature")
-    .notEmpty()
-    .withMessage("Razorpay Signature required"),
-  body("paymentDetails.amount")
-    .isInt({ min: 1 })
-    .withMessage("Amount must be a positive number"),
-  body("paymentDetails.currency")
+  body("isVerified")
     .optional()
-    .isString()
-    .isLength({ min: 3, max: 3 })
-    .withMessage("Invalid currency code"),
+    .isBoolean()
+    .withMessage("isVerified must be true or false"),
 ];
 
 const changePasswordValidation = [
   body("password")
     .isStrongPassword()
-    .withMessage("Password must be strong (min 8 chars, uppercase, lowercase, number, special char)"),
+    .withMessage(
+      "Password must have at least 8 chars, uppercase, lowercase, number, and special char"
+    ),
 ];
 
 module.exports = {
   signupValidation,
   loginValidation,
   editProfileValidation,
-  organizerKYCValidation,
-  bookingValidation,
   changePasswordValidation,
 };

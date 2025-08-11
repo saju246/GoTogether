@@ -1,26 +1,33 @@
 const express = require("express");
 const app = express();
-const { connectDB } = require("../config/database");
+const { connectDB } = require("./config/database");
 require('dotenv').config();
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 
 
 
-// const authRoutes = require('../routes/authRoutes');
+const authRoutes = require('./routes/authRoutes');
 // const profileRoutes = require('../routes/profileRoutes')
 // const requestRouter = require('../routes/requestRoutes')
 // const userRouter = require('../routes/userRoutes')
 
 const port = process.env.PORT;
 
+app.use(cors(
+  // {
+  // origin: "http://localhost:5173", // React dev server
+  // methods: ["GET", "POST", "PUT", "DELETE"],
+  // credentials: true
+// }
+));
 
 
 app.use(express.json());
 app.use(cookieParser())
 
 
-// app.use('/',authRoutes);
+app.use('/',authRoutes);
 // app.use('/profile',profileRoutes);
 // app.use('/request',requestRouter);
 // app.use('/user',userRouter);
